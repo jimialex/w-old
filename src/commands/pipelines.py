@@ -26,11 +26,12 @@ class Pipeline:
     @staticmethod
     @settings(allow_sudo=True)
     def setup_server(context: CommandContext):
+        print("\n****************************Setting up server...")
         Server.deps(context)
         Server.user(context)
         Server.group(context)
         Server.layout(context)
-        Server.create_db(context)
+        #Server.create_db(context)
         Server.fix_permissions(context)
         Server.git(context)
         Server.add_remote(context)
@@ -62,6 +63,13 @@ class Pipeline:
         Project.push(context)
         Project.environment(context)
         Project.install(context)
+        Project.clean(context)
+
+    @staticmethod
+    @settings()
+    def push(context: CommandContext):
+        Project.push(context)
+        Project.environment(context)
         Project.clean(context)
 
     @staticmethod

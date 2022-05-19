@@ -40,18 +40,23 @@ class Project:
 
         python = Project.get_python(context.config)
 
-        click.echo(click.style('-> Configuring virtualenv', fg='cyan'))
+        click.echo(click.style('-> Configuring virtualenv \n {0}'.format(venv_path), fg='cyan'))
 
         # TODO Check if folder exist, skip this step if this folder exists
         # TODO if an error occurrs recreate the folder
+        #context.connection.run(
+            #'virtualenv -p python3 {0} --always-copy --no-site-packages'.format(venv_path),
+            #warn=True, hide='both'
+        #)
         context.connection.run(
-            'virtualenv -p python3 {0} --always-copy --no-site-packages'.format(venv_path),
+            'virtualenv -p python3.9 {0} --always-copy'.format(venv_path),
             warn=True, hide='both'
         )
 
         with context.connection.cd(code_path):
 
             click.echo(click.style('-> Installing production requirements ', fg='cyan'))
+            context.connection.run('{0} install -r requirements/common.txt'.format(pip))
             context.connection.run('{0} install -r requirements/production.txt'.format(pip))
 
             click.echo(click.style('-> Loading migrations', fg='cyan'))
@@ -69,6 +74,7 @@ class Project:
                 '-i \'*.less\' '
                 '-i \'*.sass\' '.format(python)
             )
+            click.echo(click.style('\n\n-> Update, now restar', fg='cyan'))
 
     @staticmethod
     def migrate(context: CommandContext):
@@ -123,7 +129,7 @@ class Project:
         code_path = '{0}/code/'.format(context.config.project_path)
         manage_py = '{0}manage.py'.format(code_path)
         python = Project.get_python(context.config)
-
+        
         click.echo(click.style('-> Running {0}'.format(command), fg='cyan'))
 
         with context.connection.cd(code_path):

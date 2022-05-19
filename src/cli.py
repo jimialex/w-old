@@ -82,3 +82,8 @@ def run(command):
 def check_language():
     Pipeline.server_language()
 
+
+@main.command()
+def push():
+    Pipeline.push()
+

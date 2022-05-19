@@ -37,6 +37,7 @@ class Server:
 
         click.echo(click.style('\nInstalling [DATABASES] dependencies...\n', fg='green'))
 
+        context.connection.sudo('apt install -y postgresql postgresql-contrib libpq-dev')
         if context.config.db_engine == Database.POSTGRESQL:
             context.connection.sudo('apt install -y postgresql postgresql-contrib libpq-dev')
         elif context.config.db_engine == Database.MYSQL:
@@ -80,7 +81,7 @@ class Server:
 
         if context.config.deployment == Deployment.DOCKER:
             context.connection.sudo('mkdir -p {0}/volumes/'.format(context.config.project_path), hide='both')
-
+    
         context.connection.sudo(
             'chown -R {0}:{1} {2}'.format(
                 context.config.project_user,
@@ -211,6 +212,7 @@ class Server:
         elif context.config.db_engine == Database.POSTGRESQL:
             Server.postgresql(context)
         else:
+            Server.postgresql(context)
             click.echo(click.style('-> Unsupported DB Engine', fg='red'))
 
     @staticmethod
@@ -243,6 +245,7 @@ class Server:
         4. If DB not exist create DB and assign to user.
         """
         pass
+        """
         # with settings(hide('warnings'), warn_only=True):
         #     mysql_user = get_value(env.stage, "mysql_user")
         #     mysql_pass = get_value(env.stage, "mysql_pass")
@@ -276,6 +279,7 @@ class Server:
         #         "mysql_user": mysql_user,
         #         "mysql_password": mysql_pass,
         #     })
+        """
 
     @staticmethod
     def web_server(context: CommandContext):
